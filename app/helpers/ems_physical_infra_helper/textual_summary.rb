@@ -14,7 +14,7 @@ module EmsPhysicalInfraHelper::TextualSummary
   def textual_group_relationships
     TextualGroup.new(
       _("Relationships"),
-      %i(physical_racks physical_switches physical_servers datastores vms physical_servers_with_host)
+      %i(physical_racks switches physical_servers datastores vms physical_servers_with_host)
     )
   end
 
@@ -57,8 +57,18 @@ module EmsPhysicalInfraHelper::TextualSummary
     textual_link(@record.physical_racks)
   end
 
-  def textual_physical_switches
-    textual_link(@record.physical_switches)
+  def textual_switches
+    klass = @record.switches.klass
+ 
+    controller_collection ||= klass.name.underscore
+    feature ||= "#{controller_collection}_show_list"
+ 
+    available = @record.number_of(:switches) > 0
+    h = {:label => _("Physical Switches"), :icon => "ff ff-network-switch", :value => @record.number_of(:switches)}
+    if available && role_allows?(:feature => feature)
+      h[:link] = "/ems_physical_infra/#{@record.id}?display=physical_switches"
+    end
+    h
   end
 
   def textual_physical_servers

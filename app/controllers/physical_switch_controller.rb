@@ -37,6 +37,6 @@ class PhysicalSwitchController < ApplicationController
   helper_method(:textual_group_list)
 
   def self.display_methods
-    %w(physical_switches)
+    %w(switches)
   end
 end
